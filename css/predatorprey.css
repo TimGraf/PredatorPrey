@@ -1,0 +1,57 @@
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+.kineticjs-content {
+    display: block !important;
+    border: 1px solid #000000;
+    background: #95B9C7;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#description img {
+    display: block;
+    border: 1px solid #000000;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 600px;
+}
+
+#description p {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 600px;
+}
+
+#description a {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 600px;
+}
+
+#container {
+    position: relative;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+canvas {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}

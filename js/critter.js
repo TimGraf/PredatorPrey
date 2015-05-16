@@ -51,6 +51,9 @@ PREDATOR_PREY.Critter = function(worldRef, initMaxSpeed, initSize, initColor) {
         getId: function() {
             return id;
         },
+        isSameCritter: function(critter) {
+            return (critter.getId() === id)
+        },
         getImage: function() {
             return img;
         },

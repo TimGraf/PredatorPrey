@@ -74,7 +74,7 @@ PREDATOR_PREY.Prey = function(world) {
 
             prey.forEach(function(critter) {
 
-                if (critter.getId() !== thisPrey.getId()) {
+                if (!thisPrey.isSameCritter(critter)) {
 
                     if (thisPrey.getDistance(critter) <= config.CFG_PREY_ALIGN_DISTANCE) {
                         critterVel = critter.getVelocity();

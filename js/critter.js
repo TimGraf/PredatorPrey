@@ -40,7 +40,7 @@ PREDATOR_PREY.Critter = function(worldRef, initMaxSpeed, initSize, initColor) {
         y: 0
     };
 
-    hdg = Math.atan2(vel.y, vel.x),
+    hdg = Math.atan2(vel.y, vel.x);
 
     img.setX(pos.x);
     img.setY(pos.y);

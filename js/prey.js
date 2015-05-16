@@ -37,34 +37,32 @@ PREDATOR_PREY.Prey = function(world) {
             thisPrey.avoid(prey, personalSpace, avoidanceFactor);
         }
     }
-    
-    // prey group together method
-    function group() {
-        var velocity           = thisPrey.getVelocity(),
-            prey               = world.getPrey(),
-            codependencyFactor = config.CFG_PREY_CODEPENDENCY_FACTOR,
-            detectionRange     = config.CFG_PREY_GROUP_DISTANCE,
-            avgPos,
-            avgDist;
 
-        if (prey.length > 0) {
-            avgPos  = thisPrey.getAveragePosition(prey, detectionRange);
-            avgDist = thisPrey.getAverageDistance(avgPos);
+    // prey evade predator method basically the same as avoid but given stronger factors
+    function evade() {
+        var predators     = world.getPredators(),
+            predatorRange = config.CFG_PREY_EVADE_DISTANCE,
+            fearFactor    = config.CFG_PREY_FEAR_FACTOR;
 
-            if (avgDist !== 0) {
-                velocity.x = Math.min(velocity.x + (avgPos.x / avgDist) * codependencyFactor, initMaxSpeed);
-                velocity.y = Math.min(velocity.y + (avgPos.y / avgDist) * codependencyFactor, initMaxSpeed);
-
-                thisPrey.setVelocity(velocity);
-            }
+        if (predators.length > 0) {
+            thisPrey.avoid(predators, predatorRange, fearFactor);
         }
     }
     
-    // prey align direction method
+    // prey group together method (using the basic critter attraction trait)
+    function group() {
+        var prey               = world.getPrey(),
+            codependencyFactor = config.CFG_PREY_CODEPENDENCY_FACTOR,
+            detectionRange     = config.CFG_PREY_GROUP_DISTANCE;
+
+        thisPrey.attractTo(prey, codependencyFactor, detectionRange);
+    }
+    
+    // prey align direction method (only prey have this trait)
     function align() {
         // calculate the average velocity of the other prey
-        var avgX     = 0,
-            avgY     = 0,
+        var avgXVel  = 0,
+            avgYVel  = 0,
             velocity = thisPrey.getVelocity(),
             prey     = world.getPrey(),
             critterVel,
@@ -78,33 +76,22 @@ PREDATOR_PREY.Prey = function(world) {
 
                     if (thisPrey.getDistance(critter) <= config.CFG_PREY_ALIGN_DISTANCE) {
                         critterVel = critter.getVelocity();
-                        avgX      += critterVel.x;
-                        avgY      += critterVel.y;
+                        avgXVel   += critterVel.x;
+                        avgYVel   += critterVel.y;
                     }
                 }
             });
 
-            avgX    /= prey.length;
-            avgY    /= prey.length;
-            distance = Math.sqrt((avgX * avgX) + (avgY * avgY));
+            avgXVel /= prey.length;
+            avgYVel /= prey.length;
+            distance = Math.sqrt((avgXVel * avgXVel) + (avgYVel * avgYVel));
 
             if (distance !== 0) {
-                velocity.x = Math.min(velocity.x + (avgX / distance) * 0.05, initMaxSpeed); // XXX need to look at this what is the 0.05 value in the model
-                velocity.y = Math.min(velocity.y + (avgY / distance) * 0.05, initMaxSpeed); // XXX need to look at this what is the 0.05 value in the model
+                velocity.x = Math.min(velocity.x + (avgXVel / distance) * 0.05, initMaxSpeed);
+                velocity.y = Math.min(velocity.y + (avgYVel / distance) * 0.05, initMaxSpeed);
 
                 thisPrey.setVelocity(velocity);
             }
-        }
-    }
-    
-    // prey evade predator method
-    function evade() {
-        var predators     = world.getPredators(),
-            predatorRange = config.CFG_PREY_EVADE_DISTANCE,
-            fearFactor    = config.CFG_PREY_FEAR_FACTOR;
-
-        if (predators.length > 0) {
-            thisPrey.avoid(predators, predatorRange, fearFactor);
         }
     }
     

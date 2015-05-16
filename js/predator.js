@@ -24,27 +24,14 @@ PREDATOR_PREY.Predator = function(worldRef) {
     thisPredator.addBehavior(avoid);
     thisPredator.addBehavior(chase);
     
-    // the chase is on
+    // the chase is on (using the basic critter attraction)
     function chase() {
         // calculate the average distance to the detectable prey
         var prey              = worldRef.getPrey(),
-            velocity          = thisPredator.getVelocity(),
             detectionRange    = config.CFG_PREDATOR_DETECTION_RAGE,
-            maneuveringFactor = config.CFG_PREDATOR_MANEUVER_FACTOR,
-            avgPos,
-            avgDist;
+            maneuveringFactor = config.CFG_PREDATOR_MANEUVER_FACTOR;
 
-        if (prey.length > 0) {
-            avgPos  = thisPredator.getAveragePosition(prey, detectionRange);
-            avgDist = thisPredator.getAverageDistance(avgPos);
-
-            if (Math.abs(avgDist) > (detectionRange * 0.2)) {
-                velocity.x += (avgPos.x / avgDist) * maneuveringFactor;
-                velocity.y += (avgPos.y / avgDist) * maneuveringFactor;
-
-                thisPredator.setVelocity(velocity);
-            }
-        }
+        thisPredator.attractTo(prey, maneuveringFactor, detectionRange);
     }
     
     // give the other predator personal space

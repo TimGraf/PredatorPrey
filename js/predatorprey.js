@@ -16,21 +16,21 @@ if (typeof PREDATOR_PREY.namespace === "undefined") {
         "use strict";
         
         var parts = ns_string.split('.'),
-            parent = PREDATOR_PREY,
-            i;
+            parent = PREDATOR_PREY;
             
         // strip redundant leading global
         if (parts[0] === "PREDATOR_PREY") {
             parts = parts.slice(1);
         }
     
-        for (i = 0; i < parts.length; i += 1) {
+        parts.forEach(function(part) {
             // create a property if it doesn't exist
-            if (typeof parent[parts[i]] === "undefined") {
-                parent[parts[i]] = {};
+            if (typeof parent[part] === "undefined") {
+                parent[part] = {};
             }
-            parent = parent[parts[i]];
-        }
+            parent = parent[part];
+        });
+
         return parent;
     };
 }

@@ -23,7 +23,7 @@ PREDATOR_PREY.Critter = function(worldRef, initMaxSpeed, initSize, initColor) {
 
     img = new Kinetic.Circle({
         radius: initSize,
-        fill: initColor, // use parameter since predator and prey use this object
+        fill: initColor,
         stroke: config.CFG_CRITTER_OUTLINE_COLOR,
         strokeWidth: 1,
         scaleX: 4,
@@ -151,6 +151,20 @@ PREDATOR_PREY.Critter = function(worldRef, initMaxSpeed, initSize, initColor) {
             if (numClose > 0) {
                 vel.x -= distanceX / avoidanceFactor;
                 vel.y -= distanceY / avoidanceFactor;
+            }
+        },
+        attractTo: function(critters, attractionFactor, attractionRange) {
+            var avgPos,
+                avgDist;
+
+            if (critters.length > 0) {
+                avgPos  = thisCritter.getAveragePosition(critters, attractionRange);
+                avgDist = thisCritter.getAverageDistance(avgPos);
+
+                if (avgDist !== 0) {
+                    vel.x = Math.min(vel.x + (avgPos.x / avgDist) * attractionFactor, initMaxSpeed);
+                    vel.y = Math.min(vel.y + (avgPos.y / avgDist) * attractionFactor, initMaxSpeed);
+                }
             }
         },
         move: function() {

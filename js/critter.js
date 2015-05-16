@@ -1,12 +1,12 @@
 // Setup PREDATOR_PREY Critter name space
 PREDATOR_PREY.namespace('PREDATOR_PREY.Critter');
 
-PREDATOR_PREY.Critter = function(worldRef, initPos, initVel, initMaxSpeed, initSize, initColor) {
+PREDATOR_PREY.Critter = function(worldRef, initMaxSpeed, initSize, initColor) {
     "use strict";
     
     // Guard against this object not being invoked with the "new" operator
     if (!(this instanceof PREDATOR_PREY.Critter)) {
-        return new PREDATOR_PREY.Critter(worldRef, initPos, initVel, initMaxSpeed, initSize, initColor);
+        return new PREDATOR_PREY.Critter(worldRef, initMaxSpeed, initSize, initColor);
     }
     
     // Static variable to keep count of the critters
@@ -14,9 +14,9 @@ PREDATOR_PREY.Critter = function(worldRef, initPos, initVel, initMaxSpeed, initS
     
     var thisCritter,
         img,
-        pos       = initPos,
-        vel       = initVel,
-        hdg       = Math.atan2(vel.y, vel.x),
+        pos,
+        vel,
+        hdg,
         behaviors = [],                                       // All them critters got behavior problems
         id        = "CRITTER_" + PREDATOR_PREY.Critter.count, // Instance ID based on current static count
         config    = worldRef.getConfig();
@@ -29,9 +29,21 @@ PREDATOR_PREY.Critter = function(worldRef, initPos, initVel, initMaxSpeed, initS
         scaleX: 4,
         strokeScaleEnabled: false
     });
-        
-    img.setX(initPos.x);
-    img.setY(initPos.y);
+
+    pos = {
+        x: Math.random() * config.CFG_HEIGHT,
+        y: Math.random() * config.CFG_WIDTH
+    };
+
+    vel = {
+        x: initMaxSpeed,
+        y: 0
+    };
+
+    hdg = Math.atan2(vel.y, vel.x),
+
+    img.setX(pos.x);
+    img.setY(pos.y);
     img.rotate(hdg);
     
     // Public Interface

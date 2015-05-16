@@ -14,23 +14,12 @@ PREDATOR_PREY.Prey = function(world) {
     }
     
     var thisPrey,
-        initPos,
-        initVel,
         initSize     = 1,
         config       = world.getConfig(),
         initMaxSpeed = config.CFG_PREY_MAX_SPEED;
 
-    initPos = {
-        x: Math.random() * config.CFG_HEIGHT,
-        y: Math.random() * config.CFG_WIDTH
-    };
-
-    initVel = {
-        x: initMaxSpeed,
-        y: 0
-    };
     // Prey extends critter
-    thisPrey = Object.create(new PREDATOR_PREY.Critter(world, initPos, initVel, initMaxSpeed, initSize, config.CFG_PREY_COLOR));
+    thisPrey = Object.create(new PREDATOR_PREY.Critter(world, initMaxSpeed, initSize, config.CFG_PREY_COLOR));
     
     // Add behavior models in order of most important last
     thisPrey.addBehavior(avoid);

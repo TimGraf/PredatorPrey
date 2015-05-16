@@ -55,7 +55,7 @@ window.onload = function() {
             CSS_CONTAINER: "container",
             CFG_WIDTH: 600,
             CFG_HEIGHT: 400,
-            CFG_NUM_PREY: 120,
+            CFG_NUM_PREY: 180,
             CFG_NUM_PREDATOR: 2,
             CFG_ON_SCREEN_TENDENCY: 0.04, // higher values more likely to stay on screen
             CFG_CRITTER_DECELERATION_FACTOR: 0.5, // lower value quicker deceleration

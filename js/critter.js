@@ -9,20 +9,18 @@ PREDATOR_PREY.Critter = function(worldRef, initPos, initVel, initMaxSpeed, initS
         return new PREDATOR_PREY.Critter(worldRef, initPos, initVel, initMaxSpeed, initSize, initColor);
     }
     
-    // Static variable to keep count of the criiters
+    // Static variable to keep count of the critters
     PREDATOR_PREY.Critter.count = ++PREDATOR_PREY.Critter.count || 0;
     
-    var id,
-        publicInterface,
-        config,
+    var thisCritter,
         img,
-        pos = initPos,
-        vel = initVel,
-        hdg = Math.atan2(vel.y, vel.x);
-    
-    // Instance ID based on current staic count
-    id = "CRITTER_" + PREDATOR_PREY.Critter.count;
-    config = worldRef.getConfig();
+        pos       = initPos,
+        vel       = initVel,
+        hdg       = Math.atan2(vel.y, vel.x),
+        behaviors = [],                                       // All them critters got behavior problems
+        id        = "CRITTER_" + PREDATOR_PREY.Critter.count, // Instance ID based on current static count
+        config    = worldRef.getConfig();
+
     img = new Kinetic.Circle({
         radius: initSize,
         fill: initColor, // use parameter since predator and prey use this object
@@ -36,8 +34,8 @@ PREDATOR_PREY.Critter = function(worldRef, initPos, initVel, initMaxSpeed, initS
     img.setY(initPos.y);
     img.rotate(hdg);
     
-    // Public Interface - any methods defined here should be well documented
-    publicInterface = {
+    // Public Interface
+    thisCritter = {
         getId: function() {
             return id;
         },
@@ -68,15 +66,87 @@ PREDATOR_PREY.Critter = function(worldRef, initPos, initVel, initMaxSpeed, initS
         },
         getDistance: function(critter) {
             var critterPos = critter.getPosition(),
-                distX = pos.x - critterPos.x,
-                distY = pos.y - critterPos.y;
+                distX      = pos.x - critterPos.x,
+                distY      = pos.y - critterPos.y;
 
             return Math.sqrt(distX * distX + distY * distY);
         },
+        getAveragePosition: function(critters, detectionRange) {
+            var critterPos,
+                avgX = 0,
+                avgY = 0;
+
+            critters.forEach(function (critter) {
+                critterPos = critter.getPosition();
+
+                if (thisCritter.getDistance(critter) <= detectionRange) {
+                    avgX += (pos.x - critterPos.x);
+                    avgY += (pos.y - critterPos.y);
+                }
+            });
+
+            avgX /= critters.length;
+            avgY /= critters.length;
+
+            return {x: avgX, y: avgY};
+        },
+        getAverageDistance: function(avgPosition) {
+            return Math.sqrt((avgPosition.x * avgPosition.x) + (avgPosition.y * avgPosition.y)) * -1.0;
+        },
+        addBehavior: function(behavior) {
+            behaviors.push(behavior);
+        },
+        avoid: function(critters, minDist, avoidanceFactor) {
+            var distanceX = 0,
+                distanceY = 0,
+                numClose  = 0,
+                xDiff,
+                yDiff,
+                critterPos,
+                distance;
+
+            critters.forEach(function (critter) {
+                critterPos = critter.getPosition();
+
+                // Don't include itself
+                if (critter.getId() !== id) {
+                    distance = thisCritter.getDistance(critter);
+
+                    if (distance < minDist) {
+                        numClose++;
+
+                        xDiff = (pos.x - critterPos.x);
+                        yDiff = (pos.y - critterPos.y);
+
+                        if (xDiff < 0) {
+                            distanceX += Math.sqrt(minDist) - xDiff;
+                        } else {
+                            distanceX += -Math.sqrt(minDist) - xDiff;
+                        }
+
+                        if (yDiff < 0) {
+                            distanceY += Math.sqrt(minDist) - yDiff;
+                        } else {
+                            distanceY += -Math.sqrt(minDist) - yDiff;
+                        }
+                    }
+                }
+            });
+
+            if (numClose > 0) {
+                vel.x -= distanceX / avoidanceFactor;
+                vel.y -= distanceY / avoidanceFactor;
+            }
+        },
         move: function() {
-            var newHdg,
-                onScreenTendancy = config.CFG_ON_SCREEN_TENDANCY,
-                decelRate = config.CFG_CRITTER_DECELERATION_FACTOR;
+            var onScreenTendancy = config.CFG_ON_SCREEN_TENDENCY,
+                decelRate        = config.CFG_CRITTER_DECELERATION_FACTOR,
+                newHdg;
+
+            // Loop through each behavior function to move the critter
+            behaviors.forEach(function(behavior) {
+                behavior();
+            });
                 
             // track position
             pos.x += vel.x;
@@ -123,7 +193,7 @@ PREDATOR_PREY.Critter = function(worldRef, initPos, initVel, initMaxSpeed, initS
             
             hdg = newHdg;
         }
-    }
+    };
     
-    return publicInterface;
-}
+    return thisCritter;
+};

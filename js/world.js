@@ -11,7 +11,7 @@ PREDATOR_PREY.World = function(config) {
     
     var publicInterface,
         predators = [],
-        prey = [];
+        prey      = [];
 
     // Public Interface - any methods defined here should be well documented
     publicInterface = {
@@ -40,24 +40,26 @@ PREDATOR_PREY.World = function(config) {
                     height: config.CFG_HEIGHT
                 }),
                 anim = new Kinetic.Animation(function(frame) {
-                    for (i = 0; i < config.CFG_NUM_PREDATOR; i++) {
-                        predators[i].move();
-                    }
-                
-                    for (i = 0; i < config.CFG_NUM_PREY; i++) {
-                        prey[i].move();
-                    }
+
+                    predators.forEach(function(critter) {
+                        critter.move();
+                    });
+
+                    prey.forEach(function(critter) {
+                        critter.move();
+                    });
                 }, layer);
-            
+
+            // Fill the world with predator critters
             for (i = 0; i < config.CFG_NUM_PREDATOR; i++) {
                 critter = new PREDATOR_PREY.Predator(publicInterface);
                 
                 predators.push(critter);
                 layer.add(critter.getImage());
             }
-            
+            // Fill the world with prey critters
             for (i = 0; i < config.CFG_NUM_PREY; i++) {
-                critter = new PREDATOR_PREY.Prey(publicInterface)
+                critter = new PREDATOR_PREY.Prey(publicInterface);
                 
                 prey.push(critter);
                 layer.add(critter.getImage());
@@ -66,7 +68,7 @@ PREDATOR_PREY.World = function(config) {
             stage.add(layer);
             anim.start();
         }
-    }
+    };
     
     return publicInterface;
-}
+};

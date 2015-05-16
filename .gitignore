@@ -1,0 +1,8 @@
+# Created by .gitignore support plugin (hsz.mobi)
+# Idea IDE
+.idea
+*.iml
+*.launch
+
+# OS Files
+.DS_Store

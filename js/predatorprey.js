@@ -15,7 +15,7 @@ if (typeof PREDATOR_PREY.namespace === "undefined") {
     PREDATOR_PREY.namespace = function(ns_string) {
         "use strict";
         
-        var parts = ns_string.split('.'),
+        var parts  = ns_string.split('.'),
             parent = PREDATOR_PREY;
             
         // strip redundant leading global

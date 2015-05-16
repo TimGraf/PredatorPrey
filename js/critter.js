@@ -120,7 +120,7 @@ PREDATOR_PREY.Critter = function(worldRef, initMaxSpeed, initSize, initColor) {
                 critterPos,
                 distance;
 
-            critters.forEach(function (critter) {
+            critters.forEach(function(critter) {
                 critterPos = critter.getPosition();
 
                 // Don't include itself
@@ -172,7 +172,7 @@ PREDATOR_PREY.Critter = function(worldRef, initMaxSpeed, initSize, initColor) {
                 decelRate        = config.CFG_CRITTER_DECELERATION_FACTOR,
                 newHdg;
 
-            // Loop through each behavior function to move the critter
+            // Loop through each behavior function to control how the critter moves
             behaviors.forEach(function(behavior) {
                 behavior();
             });
